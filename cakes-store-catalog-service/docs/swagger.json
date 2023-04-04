@@ -1,0 +1,84 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API server for Cake Store catalog service",
+        "title": "Cakes store catalog-service",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/catalog": {
+            "get": {
+                "description": "handler for getting all the catalog from the database",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "catalog",
+                "operationId": "catalog",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entities.Cake"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entities.Cake": {
+            "type": "object",
+            "properties": {
+                "berries": {
+                    "type": "string"
+                },
+                "biscuitType": {
+                    "type": "string"
+                },
+                "creamType": {
+                    "type": "string"
+                },
+                "customText": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "fillingType": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "imgUrl": {
+                    "type": "string"
+                },
+                "isCustom": {
+                    "type": "boolean"
+                },
+                "price": {
+                    "type": "number"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "toppingType": {
+                    "type": "string"
+                },
+                "weight": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

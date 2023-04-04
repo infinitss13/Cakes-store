@@ -1,0 +1,56 @@
+basePath: /
+definitions:
+  entities.Cake:
+    properties:
+      berries:
+        type: string
+      biscuitType:
+        type: string
+      creamType:
+        type: string
+      customText:
+        type: string
+      description:
+        type: string
+      fillingType:
+        type: string
+      id:
+        type: integer
+      imgUrl:
+        type: string
+      isCustom:
+        type: boolean
+      price:
+        type: number
+      title:
+        type: string
+      toppingType:
+        type: string
+      weight:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API server for Cake Store catalog service
+  title: Cakes store catalog-service
+  version: "1.0"
+paths:
+  /catalog:
+    get:
+      description: handler for getting all the catalog from the database
+      operationId: catalog
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.Cake'
+      summary: catalog
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

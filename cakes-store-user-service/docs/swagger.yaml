@@ -1,0 +1,128 @@
+basePath: /
+definitions:
+  docs.ErrorResponse:
+    properties:
+      error: {}
+    type: object
+  docs.SuccessSignIn:
+    properties:
+      token:
+        type: string
+    type: object
+  docs.SuccessSignUp:
+    properties:
+      message:
+        type: string
+    type: object
+  entities.UserPersonalData:
+    properties:
+      dateOfBirth:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      imgUrl:
+        type: string
+      lastName:
+        type: string
+      password:
+        type: string
+      phoneNumber:
+        type: string
+      role:
+        type: integer
+    required:
+    - email
+    - firstName
+    - lastName
+    - password
+    - phoneNumber
+    type: object
+  entities.UserSignInData:
+    properties:
+      password:
+        type: string
+      phoneNumber:
+        type: string
+    required:
+    - password
+    - phoneNumber
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API server for Cake Store user service
+  title: Cakes store user-service
+  version: "1.0"
+paths:
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: handler for SignIn request, allows user to authenticate
+      operationId: signIn
+      parameters:
+      - description: signInRequest info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UserSignInData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/docs.SuccessSignIn'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/docs.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/docs.ErrorResponse'
+      summary: SignIn
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: handler for SignUp request, allows user to register in service
+      operationId: signup
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UserPersonalData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/docs.SuccessSignUp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/docs.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/docs.ErrorResponse'
+      summary: SignUp
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
