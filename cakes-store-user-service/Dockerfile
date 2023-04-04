@@ -14,4 +14,4 @@ RUN go mod download
 
 ENTRYPOINT go run cmd/main.go
 
-EXPOSE 8080
+EXPOSE 8001

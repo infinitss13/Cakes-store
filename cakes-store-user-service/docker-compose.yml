@@ -6,7 +6,7 @@ networks:
 
 services:
   postgres:
-    container_name: 'postgres'
+    container_name: 'postgres-cakes'
     image: postgres
     environment:
       POSTGRES_PASSWORD: 'qwerty'
@@ -19,12 +19,10 @@ services:
 
   cakes-store:
     ports:
-      - '8080:8080'
+      - '8001:8001'
     build: .
     env_file:
       - ./.env
-    links:
-      - "postgres:postgres"
     networks:
       - internal
     depends_on:
