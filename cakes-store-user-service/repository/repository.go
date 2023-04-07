@@ -30,7 +30,6 @@ func NewDatabase(config config.DBConfig) (*Database, error) {
 	if err != nil {
 		return nil, fmt.Errorf("with instance failed: %w", err)
 	}
-
 	m, err := migrate.NewWithDatabaseInstance("file://schema", "postgres", driver)
 	if err != nil {
 		return nil, fmt.Errorf("new with database instance failed: %w", err)
@@ -90,4 +89,16 @@ func (db *Database) GetPasswordByNumber(phoneNumber string) (string, error) {
 		return "", err
 	}
 	return passwordHash, nil
+}
+
+func (db *Database) GetUserIDByNumber(phoneNumber string) (int, error) {
+	var id int
+	query := "SELECT id from usersData WHERE phoneNumber=$1"
+	err := db.QueryRow(query, phoneNumber).Scan(&id)
+
+	if err != nil {
+		return 0, err
+	}
+	fmt.Println("ID in repo user Service : ", id)
+	return id, nil
 }

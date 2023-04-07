@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,10 +15,16 @@ import (
 // @Success 200 {object} entities.Cake
 // @Router /catalog [get]
 func (h *CatalogHandlers) catalog(ctx *gin.Context) {
-	cakes, err := h.ServiceCatalog.GetCatalog()
+	limit := ctx.Query("limit")
+	cakes, err := h.ServiceCatalog.GetCatalog(limit)
 	if err != nil {
 		logrus.Error(err)
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, err)
 	}
 	ctx.JSON(http.StatusOK, cakes)
+}
+
+func (h *CatalogHandlers) addToCart(ctx *gin.Context) {
+	id, exists := ctx.Get("userID")
+	fmt.Println(id, exists)
 }

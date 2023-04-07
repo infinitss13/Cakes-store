@@ -121,3 +121,20 @@ func (database MongoDatabase) GetCatalog() ([]entities.Cake, error) {
 	}
 	return cakes, nil
 }
+
+func (database MongoDatabase) GetCatalogWithLimit(limit int) ([]entities.Cake, error) {
+	cursor, err := database.collection.Find(context.Background(), bson.D{}, options.Find().SetLimit(int64(limit)))
+	if err != nil {
+		return nil, fmt.Errorf("AAAAAAAAA : %w", err)
+	}
+
+	var cakes []entities.Cake
+	for cursor.Next(context.Background()) {
+		var cake entities.Cake
+		if err = cursor.Decode(&cake); err != nil {
+			return nil, err
+		}
+		cakes = append(cakes, cake)
+	}
+	return cakes, nil
+}

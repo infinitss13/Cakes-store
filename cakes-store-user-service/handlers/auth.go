@@ -3,7 +3,9 @@ package handlers
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -56,6 +58,11 @@ func (handlers AuthHandlers) signUp(context *gin.Context) {
 	})
 }
 
+type JWTClaim struct {
+	ID string `json:"userID"`
+	jwt.StandardClaims
+}
+
 // @Summary SignIn
 // @Tags auth
 // @Description handler for SignIn request, allows user to authenticate
@@ -74,7 +81,8 @@ func (handlers AuthHandlers) signIn(c *gin.Context) {
 		return
 	}
 	logrus.Info("PASSWORD : ", signInReq.Password)
-	err := handlers.ServiceAuth.CheckUser(signInReq)
+	id, err := handlers.ServiceAuth.CheckUser(signInReq)
+	fmt.Println("ID in handlers user service : ", id)
 	if err != nil {
 		httpStatusCode, err := validateError(err)
 		logrus.Error(err)
@@ -83,11 +91,14 @@ func (handlers AuthHandlers) signIn(c *gin.Context) {
 		})
 		return
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"phone": signInReq.PhoneNumber,
-		"exp":   time.Now().Add(time.Hour * 24).Unix(),
-	})
-	tokenString, err := token.SignedString([]byte("your-secret-key"))
+	claims := &JWTClaim{
+		ID: strconv.Itoa(id),
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Duration(20) * time.Minute).Unix(),
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString([]byte(""))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create JWT token"})
 		return

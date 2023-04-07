@@ -35,7 +35,7 @@ func main() {
 	}
 	server := new(cakes_store_user_service.Server)
 	port := config.GetPortEnv()
-	logrus.Info("Starting application on the port ", port)
+	logrus.Info("Starting AAAAAAAAAAAAAAAAAAAAAAAAA application on the port ", port)
 	err = server.Run(port, handlers)
 	if err != nil {
 		logrus.Error(err)

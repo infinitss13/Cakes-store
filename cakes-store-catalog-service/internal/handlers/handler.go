@@ -14,7 +14,10 @@ type CatalogHandlers struct {
 }
 
 type ServiceCatalog interface {
-	GetCatalog() ([]entities.Cake, error)
+	GetCatalog(limit string) ([]entities.Cake, error)
+	VerifyToken(tokenSigned string) (string, error)
+	GetToken(context *gin.Context) (string, error)
+	Auth() gin.HandlerFunc
 }
 
 func NewAuthHandlers(serviceAuth ServiceCatalog) *CatalogHandlers {
@@ -28,8 +31,10 @@ func SetRequestHandlers(serviceAuth ServiceCatalog) (*gin.Engine, error) {
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "hello message")
 	})
-
+	cart := router.Group("/cart").Use(serviceAuth.Auth())
+	{
+		cart.POST("/addCart", handlers.addToCart)
+	}
 	router.GET("/catalog", handlers.catalog)
-
 	return router, nil
 }

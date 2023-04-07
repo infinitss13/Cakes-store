@@ -41,7 +41,7 @@ func main() {
 	}
 	server := new(Server)
 	port := config.GetPortEnv()
-	logrus.Info("Starting application on the port ", port)
+	logrus.Info("Starting AAAAAAAAAAAAAAAAAAA application on the port ", port)
 	err = server.Run(port, handlers)
 	if err != nil {
 		logrus.Error(err)

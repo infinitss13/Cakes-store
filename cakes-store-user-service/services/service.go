@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 
@@ -19,7 +20,7 @@ func NewService(database *repository.Database) Service {
 
 type ServiceAuth interface {
 	CreateUser(userData *entities.UserPersonalData) error
-	CheckUser(signInData entities.UserSignInData) error
+	CheckUser(signInData entities.UserSignInData) (int, error)
 }
 
 func (srv Service) CreateUser(userData *entities.UserPersonalData) error {
@@ -44,19 +45,24 @@ func (srv Service) CreateUser(userData *entities.UserPersonalData) error {
 	return nil
 }
 
-func (srv Service) CheckUser(signInData entities.UserSignInData) error {
+func (srv Service) CheckUser(signInData entities.UserSignInData) (int, error) {
 	if err := isRequestedUserValid(signInData); err != nil {
-		return err
+		return 0, err
 	}
 	passwordHash, err := srv.Database.GetPasswordByNumber(signInData.PhoneNumber)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	err = isPasswordCorrect(signInData.Password, passwordHash)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	id, err := srv.Database.GetUserIDByNumber(signInData.PhoneNumber)
+	if err != nil {
+		return 0, errors.New("trouble with getting id")
+	}
+	fmt.Println("ID in service user service : ", id)
+	return id, nil
 }
 
 func isUserDataValid(userData *entities.UserPersonalData) error {
