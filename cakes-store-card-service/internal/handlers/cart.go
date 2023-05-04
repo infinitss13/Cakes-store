@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,9 +31,15 @@ func (handlers AuthHandlers) addToCart(context *gin.Context) {
 }
 
 func (handlers AuthHandlers) cart(context *gin.Context) {
-	userId := 123
-	fmt.Println(userId)
-	cakes, err := handlers.ServiceCard.GetCart(userId)
+	userId, exists := context.Get("userID")
+	if !exists {
+		logrus.Error(errors.New("user ID is not found "))
+		context.AbortWithStatusJSON(http.StatusBadRequest, errors.New("user ID is not found "))
+		return
+	}
+	//here must be implementation of getting user id from the header.
+
+	cakes, err := handlers.ServiceCard.GetCart(userId.(int))
 	if err != nil {
 		logrus.Error(err)
 		context.AbortWithStatusJSON(http.StatusBadRequest, err)

@@ -13,6 +13,9 @@ import (
 type ServiceCard interface {
 	AddItemToCart(cart entities.UserCart) error
 	GetCart(userId int) (map[string]interface{}, error)
+	Auth() gin.HandlerFunc
+	VerifyToken(tokenSigned string) (string, error)
+	GetToken(context *gin.Context) (string, error)
 }
 
 type AuthHandlers struct {
@@ -34,7 +37,7 @@ func SetRequestHandlers(serviceCard ServiceCard) (*gin.Engine, error) {
 	cart := router.Group("/cart")
 	{
 		cart.POST("/addCart", handlers.addToCart)
-		cart.GET("/getCart", handlers.cart)
+		cart.GET("/getCart", handlers.cart).Use(serviceCard.Auth())
 	}
 	return router, nil
 }
