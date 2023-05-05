@@ -16,3 +16,7 @@ type Cake struct {
 	ImgUrl string  `json:"imgUrl"`
 	Value  int     `json:"value"`
 }
+
+func NewCake() Cake {
+	return Cake{}
+}

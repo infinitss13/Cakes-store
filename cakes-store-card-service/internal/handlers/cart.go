@@ -10,8 +10,14 @@ import (
 )
 
 func (handlers AuthHandlers) addToCart(context *gin.Context) {
-	userCart := entities.NewUserCart()
-	err := context.ShouldBindJSON(&userCart)
+	userId, exists := context.Get("userID")
+	if !exists {
+		logrus.Error(errors.New("user ID is not found "))
+		context.AbortWithStatusJSON(http.StatusBadRequest, errors.New("user ID is not found "))
+		return
+	}
+	cake := entities.NewCake()
+	err := context.ShouldBindJSON(&cake)
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -19,7 +25,7 @@ func (handlers AuthHandlers) addToCart(context *gin.Context) {
 		logrus.Error(err)
 		return
 	}
-	err = handlers.ServiceCard.AddItemToCart(userCart)
+	err = handlers.ServiceCard.AddItemToCart(userId.(int), cake)
 	if err != nil {
 		logrus.Error(err)
 		context.AbortWithStatusJSON(http.StatusBadRequest, err)

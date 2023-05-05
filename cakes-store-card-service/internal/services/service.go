@@ -28,25 +28,25 @@ func NewService(Database Repository) Service {
 	return Service{Database: Database}
 }
 
-func (s Service) AddItemToCart(cart entities.UserCart) error {
+func (s Service) AddItemToCart(userId int, cake entities.Cake) error {
 	//var cakeCart json.RawMessage
 	//cakeCart, err := json.Marshal(cart.Cake)
 	//if err != nil {
 	//	return err
 	//}
 
-	isCardEmpty, err := s.Database.IsCartEmpty(cart.UserID)
+	isCardEmpty, err := s.Database.IsCartEmpty(userId)
 	if err != nil {
 		return err
 	}
 	if isCardEmpty {
-		err = s.Database.CreateCard(cart.UserID, cart.Cake)
+		err = s.Database.CreateCard(userId, cake)
 		if err != nil {
 			return err
 		}
 		return nil
 	}
-	err = s.Database.AddToCart(cart.UserID, cart.Cake)
+	err = s.Database.AddToCart(userId, cake)
 	if err != nil {
 		return err
 	}

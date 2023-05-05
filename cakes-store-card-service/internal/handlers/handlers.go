@@ -11,7 +11,7 @@ import (
 )
 
 type ServiceCard interface {
-	AddItemToCart(cart entities.UserCart) error
+	AddItemToCart(userId int, Cake entities.Cake) error
 	GetCart(userId int) (map[string]interface{}, error)
 	Auth() gin.HandlerFunc
 	VerifyToken(tokenSigned string) (string, error)

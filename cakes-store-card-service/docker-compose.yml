@@ -11,10 +11,10 @@ services:
     image: 'mongo:4.4.6'
     container_name: 'mongo-card-service'
     ports:
-      - '27017:27017'
+      - '27018:27018'
   cakes-store-cart-services:
     ports:
-      - '8001:8001'
+      - '8002:8002'
     build: .
     volumes:
       - ./:/app

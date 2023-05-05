@@ -8,7 +8,7 @@ import (
 func GetPortEnv() string {
 	port := os.Getenv("PORT_CAKE_USER")
 	if port == "" {
-		port = "8001"
+		port = "8002"
 	}
 	return ":" + port
 }
